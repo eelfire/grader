@@ -32,11 +32,23 @@ func NewTemplates() *Templates {
 	}
 }
 
+func createDirectory() {
+	folderPath := "./db"
+
+	err := os.Mkdir(folderPath, os.ModePerm)
+	if err != nil {
+		fmt.Println("Error creating folder:", err)
+		os.Exit(1)
+	}
+}
+
 func DB() *sql.DB {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	createDirectory()
 
 	dbUrl := os.Getenv("LOCAL_DB")
 	db, err := sql.Open("sqlite3", dbUrl)
