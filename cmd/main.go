@@ -14,6 +14,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -37,8 +38,8 @@ func DB() *sql.DB {
 		log.Fatal("Error loading .env file")
 	}
 
-	dbUrl := os.Getenv("DB_URL")
-	db, err := sql.Open("libsql", dbUrl)
+	dbUrl := os.Getenv("LOCAL_DB")
+	db, err := sql.Open("sqlite3", dbUrl)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to open db %s: %s", dbUrl, err)
 		os.Exit(1)
