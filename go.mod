@@ -5,6 +5,7 @@ go 1.21.5
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
+	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/tursodatabase/libsql-client-go v0.0.0-20231216154754-8383a53d618f
 )
 
