@@ -1,3 +1,6 @@
 /tmp
+/db
+/node_modules
+
 .env
-/db/*.sqlite
+index.css
