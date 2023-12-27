@@ -6,6 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/index.css"> <!-- tailwind -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script> <!-- htmx -->
     <title>grader</title>
 </head>
 
@@ -25,8 +27,75 @@
             </div>
         </div>
     </div>
+    <div id="courses">
+        {{ template "courses" . }}
+    </div>
+    <button hx-post="/api/courses/add" hx-target="#courses" hx-swap="beforeend">add course</button>
 </body>
 
 </html>
 
+{{ end }}
+
+
+{{ block "courses" . }}
+<!-- <div class="courses"> -->
+{{ range .Courses }}
+{{ template "course" . }}
+{{ end }}
+<!-- </div> -->
+{{ end }}
+
+{{ block "course" . }}
+<div class="flex m-2 border bg-slate-100 items-center overflow-scroll">
+    <div class="flex flex-col w-24 text-teal-800 bg-teal-200">
+        <input hx-put="/api/courses/{{.Id}}" hx-trigger="change" name="Code" value="{{.Code}}">
+        <input hx-put="/api/courses/{{.Id}}" hx-trigger="change" name="Name" value="{{.Name}}">
+        <div>{{.Id}}</div>
+    </div>
+    <div class="flex flex-row m-3 border">
+        <div class="check marks-{{.Id}} flex flex-row border">
+            <input name="CourseId" value="{{.Id}}" hidden>
+            {{ range .Marks }}
+            <div class="">
+                {{ template "marks" . }}
+            </div>
+            {{ end }}
+        </div>
+        <button hx-post="/api/courses/marks/{{.Id}}/add" hx-target=".marks-{{.Id}}" hx-swap="beforeend">add
+            marks</button>
+    </div>
+    <div class="flex flex-col">
+        <div hx-post="/api/courses/marks/{{.Id}}/total" hx-trigger="change from:.marks-{{.Id}}">
+            <div>Total Weightage:
+                {{.TotalWeightage}}
+            </div>
+            <div>Total Weighted:
+                {{.TotalWeighted}}
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}
+
+{{ block "marks" . }}
+<div class="mark w-28 m-3 border">
+    <!-- <div>{{.Score}}</div> -->
+    <!-- <div>{{.MaxScore}}</div> -->
+    <input hx-put="/api/courses/marks/{{.Id}}" hx-trigger="change" hx-target="closest .mark"
+        hx-include="previous [name='CourseId']" hx-swap="outerHTML" class="w-28" type="text" min="0" name="Name"
+        value="{{.Name}}">
+    <input hx-put="/api/courses/marks/{{.Id}}" hx-trigger="change" hx-target="closest .mark"
+        hx-include="previous [name='CourseId']" hx-swap="outerHTML" class="w-28" type="number" min="0" name="Score"
+        value="{{.Score}}">
+    <input hx-put="/api/courses/marks/{{.Id}}" hx-trigger="change" hx-target="closest .mark"
+        hx-include="previous [name='CourseId']" hx-swap="outerHTML" class="w-28" type="number" min="0" name="MaxScore"
+        value="{{.MaxScore}}">
+    <div>{{.Percentage}}</div>
+    <!-- <div>{{.Weightage}}</div> -->
+    <input hx-put="/api/courses/marks/{{.Id}}" hx-trigger="change" hx-target="closest .mark"
+        hx-include="previous [name='CourseId']" hx-swap="outerHTML" class="w-28" type="number" min="0" name="Weightage"
+        value="{{.Weightage}}">
+    <div>{{.Weighted}}</div>
+</div>
 {{ end }}

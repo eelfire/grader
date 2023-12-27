@@ -3,6 +3,7 @@ module grader
 go 1.21.5
 
 require (
+	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/mattn/go-sqlite3 v1.14.19
